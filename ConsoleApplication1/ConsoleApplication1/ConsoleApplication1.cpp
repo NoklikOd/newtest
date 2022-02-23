@@ -41,74 +41,150 @@ public:
 
 };
 
-void step(int* mas,int n);
+void step(int **mas,int n, int m);
+void move(int **mas, int s, int n, int m);
 
 int main()
 {
-    int N = 9;
-    int* m = new int[N];
+    int N = 13;
+	int M = 13;
+    int** m = new int*[N];
     for (int i = 0; i < N; i++)
     {
-        m[i] = 0;
+		m[i] = new int[M];
     }
+	
+    for(int i=0;i<N;i++)
+	{
+		for(int t=0;t<M;t++)
+		{
+			m[i][t]=0;
+		}
+	}
    
-    step(m, N);
+    step(m, N, M);
     while (true)
     {
-        if (kbhit())
+        if (_kbhit())
         {
-            switch (getch())
+            switch (_getch())
             {
             case 72: //UP
-                step(m, N);
+                step(m, N, M);
+                move(m, UP, N, M);
                 break;
             case 80: //DOWN
-                step(m, N);
+                step(m, N, M);
+                move(m, DOWN, N, M);
+
                 break;
-            case 75: //
-                step(m, N);
+            case 75: //LEFT
+                step(m, N, M);
+                move(m, LEFT, N, M);
+
                 break;
             case 77: //RIGHT
-                step(m, N);
+                step(m, N, M);
+                move(m, RIGHT, N, M);
+
                 break;
             }
         }
     }
 
-
+    /*
+    
+    */
 }
-void move(int *mas,int s,int n)
+void move(int **mas, int s, int n, int m)
 {
     switch (s)
     {
+    case DOWN:
+        for (int xy = 0; xy < n * m; xy++)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                for (int t = 0; t < m; t++)
+                {
+                    if (mas[i][t] != 0)
+                    {
+                        if (t + 1 <= m && mas[i][t + 1] == 0)
+                        {
+                            mas[i][t + 1] = mas[i][t];
+                            mas[i][t] = 0;
+                        }
+                    }
+                }
+            }			
+        }
     case UP:
         for (int i = 0; i < n; i++)
         {
-            if(mas[i])
+            for (int t = 0; t < m; t++)
+            {
+                if (t >= 1 && mas[i][t - 1] == 0)
+                {
+                    mas[i][t-1] = mas[i][t];
+                    mas[i][t] = 0;
+                }
+            }
+
+        }
+    case LEFT:
+        for (int i = 0; i < n; i++)
+        {
+            for (int t = 0; t < m; t++)
+            {
+                if (i >= 1 && mas[i-1][t] == 0)
+                {
+                    mas[i - 1][t] = mas[i][t];
+                    mas[i][t] = 0;
+                }
+            }
+
+        }
+    case RIGHT:
+        for (int i = 0; i < n; i++)
+        {
+            for (int t = 0; t < m; t++)
+            {
+                if (i < n-1 && mas[i+1][t] == 0)
+                {
+                    mas[i + 1][t] = mas[i][t];
+                    mas[i][t] = 0;
+                }
+            }
+
         }
     }
 }
-void step(int* mas,int n)
+
+void step(int **mas,int n, int m)
 {
-    system("clear");
+    system("CLS");
     Cub c;
-    if (mas[c.getX() * c.getY()] == 0)
+    if (mas[c.getX()][c.getY()] == 0)
     {
-        mas[c.getX() * c.getY()] = c.getNum();
+        mas[c.getX()][c.getY()] = c.getNum();
     }  
     
 
     for (int i = 0; i < n; i++)
     {
-        if (i % 3 == 0)
-        {
-            std::cout<<std::endl;
-            std::cout<<std::endl;
-        }
-        if (mas[i] != 0)
-        {
-            std::cout << std::setw(4) << mas[i];
-        }
+		for(int t=0;t<m;t++)
+		{			
+			if (mas[i][t] != 0)
+        	{
+				std::cout<<mas[i][t];
+            	//std::cout << std::setw(4);
+        	}
+            else
+            {
+                std::cout << 'C';// << std::setw(4);
+            }
+		}
+        std::cout << std::endl;
     }
 
 }
